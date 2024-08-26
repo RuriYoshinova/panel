@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98035bd4fc462b77aaaa2973dfc379b1",
+    "content-hash": "4467b3f0d0ce595f0707fce8c743da68",
     "packages": [
+        {
+            "name": "aternos/taskmaster",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aternosorg/taskmaster.git",
+                "reference": "fb5660fe3f8d58871b9b9f980b17324071833502"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aternosorg/taskmaster/zipball/fb5660fe3f8d58871b9b9f980b17324071833502",
+                "reference": "fb5660fe3f8d58871b9b9f980b17324071833502",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "phpbench/phpbench": "^1.2",
+                "phpunit/phpunit": "^10.4"
+            },
+            "suggest": {
+                "ext-parallel": "Required for thread workers",
+                "ext-pcntl": "Required for fork workers"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aternos\\Taskmaster\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Neid",
+                    "email": "matthias@aternos.org"
+                }
+            ],
+            "description": "Object-oriented PHP library for running tasks in parallel",
+            "support": {
+                "issues": "https://github.com/aternosorg/taskmaster/issues",
+                "source": "https://github.com/aternosorg/taskmaster/tree/v1.2.0"
+            },
+            "time": "2024-07-10T11:51:17+00:00"
+        },
         {
             "name": "aws/aws-crt-php",
             "version": "v1.0.4",

@@ -1,7 +1,7 @@
+import { Addon, index as getIndex, search, limit, providers } from '@/api/server/addons';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import AddonItem from '@/components/elements/AddonItem';
 import Spinner from '@/components/elements/Spinner';
-import { Addon, index as getIndex, search, limit, providers } from '@/api/server/addons';
 import React, { useState, useEffect } from 'react';
 import { ServerContext } from '@/state/server';
 import Select from '@/components/elements/Select';
@@ -25,19 +25,23 @@ const AddonContainer = () => {
         const handler = setTimeout(async () => {
             const fetchAddons = async () => {
                 setLoading(true);
-                const searchData = (await search(uuid, searchTerm, pageSize, provider)).data;
-                const indexData = (await getIndex(uuid)).data;
+                try {
+                    const searchData = (await search(uuid, searchTerm, pageSize, provider)).data;
+                    const indexData = (await getIndex(uuid)).data;
 
-                const addonsData = searchData.hits.map((hit) => {
-                    const isInstalled = indexData.some((indexed) => {
-                        if (!indexed.update.modrinth) return false;
-                        return indexed.update.modrinth['mod-id'] === hit.project_id;
+                    const addonsData = searchData.hits.map((hit) => {
+                        const isInstalled = indexData.some((indexed) => {
+                            if (!indexed.update.modrinth) return false;
+                            return indexed.update.modrinth['mod-id'] === hit.project_id;
+                        });
+
+                        return { ...hit, isInstalled };
                     });
 
-                    return { ...hit, isInstalled };
-                });
-
-                setAddons(addonsData);
+                    setAddons(addonsData);
+                } catch (error) {
+                    console.error(error);
+                }
                 setLoading(false);
             };
 

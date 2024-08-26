@@ -1,12 +1,14 @@
 <?php
 
-namespace Pterodactyl\Http\Controllers\Api\Client\Servers;
+namespace Pterodactyl\Http\Controllers\Api\Client\Servers\AddonManager;
 
 use Pterodactyl\Http\Controllers\Api\Client\ClientApiController;
 use Pterodactyl\Repositories\Wings\DaemonFileRepository;
+use Illuminate\Support\Facades\Cache;
+use Aternos\Taskmaster\Taskmaster;
 use Pterodactyl\Models\Server;
 use Illuminate\Http\Request;
-use Yosymfony\Toml\Toml;
+use ReadAndParseTask;
 use Http;
 
 class AddonController extends ClientApiController
@@ -40,15 +42,36 @@ class AddonController extends ClientApiController
             return response()->json(['error' => 'Unsupported egg'], 400);
         }
 
-        $indexDirectory = $serverFileRepo->getDirectory("$addonDirectory.index/");
-        $addons = [];
+        $cacheKey = "server_{$server->id}_addons";
+        $taskmaster = new Taskmaster();
+        $taskmaster->autoDetectWorkers(8);
 
-        foreach ($indexDirectory as $file) {
-            $filename = $file['name'];
-            $content = $serverFileRepo->getContent("$addonDirectory.index/$filename");
-            $addonData = Toml::parse($content);
-            $addons[] = $addonData;
-        }
+        $addons = Cache::remember($cacheKey, now()->addMinutes(30), function () use ($serverFileRepo, $addonDirectory, $taskmaster) {
+            $addons = [];
+            $tasks = [];
+            $indexDirectory = $serverFileRepo->getDirectory("$addonDirectory.index/");
+
+            foreach ($indexDirectory as $file) {
+                $filename = $file['name'];
+                $filePath = "$addonDirectory.index/$filename";
+
+                // Create a new task for each file and run them
+                $task = new ReadAndParseTask($serverFileRepo, $filePath);
+                $tasks[] = $task;
+                $taskmaster->runTask($task);
+            }
+
+            $taskmaster->wait();
+
+            // Collect results from all tasks
+            foreach ($tasks as $task) {
+                $addons[] = $task->getResult();
+            }
+
+            $taskmaster->stop();
+
+            return $addons;
+        });
 
         return response()->json($addons);
     }

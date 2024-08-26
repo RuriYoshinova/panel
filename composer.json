@@ -24,6 +24,7 @@
         "ext-pdo_mysql": "*",
         "ext-posix": "*",
         "ext-zip": "*",
+        "aternos/taskmaster": "^1.2",
         "aws/aws-sdk-php": "~3.260.1",
         "doctrine/dbal": "~3.6.0",
         "guzzlehttp/guzzle": "~7.5.0",
