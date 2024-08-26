@@ -1,22 +1,3 @@
-// Copyright (c) 2015 - 2017 Dane Everitt <dane@daneeveritt.com>
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
 $(document).ready(function() {
     $('#pNestId').select2({
         placeholder: 'Select a Nest',
@@ -35,7 +16,8 @@ $(document).ready(function() {
     }).change();
 
     $('#pAllocation').select2({
-        placeholder: 'Select a Default Allocation',
+        placeholder: 'Select a Default Allocation (XD)',
+        tags: true,
     });
 
     $('#pAllocationAdditional').select2({
@@ -60,6 +42,7 @@ $('#pNodeId').on('change', function () {
             $('#pAllocation').html('').select2({
                 data: v.allocations,
                 placeholder: 'Select a Default Allocation',
+                tags: true
             });
 
             updateAdditionalAllocations();
@@ -143,23 +126,23 @@ $('#pAllocation').on('change', function () {
 });
 
 function updateAdditionalAllocations() {
-    let currentAllocation = $('#pAllocation').val();
-    let currentNode = $('#pNodeId').val();
+    const currentDefaultAllocation = $('#pAllocation').val();
+    const currentNodeId = $('#pNodeId').val();
 
-    $.each(Pterodactyl.nodeData, function (i, v) {
-        if (v.id == currentNode) {
-            let allocations = [];
+    $.each(Pterodactyl.nodeData, function (index, node) {
+        if (node.id === currentNodeId) {
+            const additionalAllocations = [];
 
-            for (let i = 0; i < v.allocations.length; i++) {
-                const allocation = v.allocations[i];
+            for (let i = 0; i < node.allocations.length; i++) {
+                const allocation = node.allocations[i];
 
-                if (allocation.id != currentAllocation) {
-                    allocations.push(allocation);
+                if (allocation.id !== currentDefaultAllocation) {
+                    additionalAllocations.push(allocation);
                 }
             }
 
             $('#pAllocationAdditional').html('').select2({
-                data: allocations,
+                data: additionalAllocations,
                 placeholder: 'Select Additional Allocations',
             });
         }

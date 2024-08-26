@@ -15,6 +15,7 @@ export default () => {
     const status = ServerContext.useStoreState((state) => state.status.value);
     const limits = ServerContext.useStoreState((state) => state.server.data!.limits);
     const previous = useRef<Record<'tx' | 'rx', number>>({ tx: -1, rx: -1 });
+    const prevDataRef = useRef();
 
     const cpu = useChartTickLabel('CPU', limits.cpu, '%', 2);
     const memory = useChartTickLabel('Memory', limits.memory, 'MiB');
@@ -56,25 +57,29 @@ export default () => {
         } catch (e) {
             return;
         }
-        cpu.push(values.cpu_absolute);
-        memory.push(Math.floor(values.memory_bytes / 1024 / 1024));
-        network.push([
-            previous.current.tx < 0 ? 0 : Math.max(0, values.network.tx_bytes - previous.current.tx),
-            previous.current.rx < 0 ? 0 : Math.max(0, values.network.rx_bytes - previous.current.rx),
-        ]);
 
-        previous.current = { tx: values.network.tx_bytes, rx: values.network.rx_bytes };
+        if (JSON.stringify(values) !== JSON.stringify(prevDataRef.current)) {
+            cpu.push(values.cpu_absolute);
+            memory.push(Math.floor(values.memory_bytes / 1024 / 1024));
+            network.push([
+                previous.current.tx < 0 ? 0 : Math.max(0, values.network.tx_bytes - previous.current.tx),
+                previous.current.rx < 0 ? 0 : Math.max(0, values.network.rx_bytes - previous.current.rx),
+            ]);
+            prevDataRef.current = values;
+            previous.current = { tx: values.network.tx_bytes, rx: values.network.rx_bytes };
+        }
     });
 
     return (
         <>
-            <ChartBlock title={'CPU Load'}>
+            <ChartBlock key='cpu' title={'CPU Load'}>
                 <Line {...cpu.props} />
             </ChartBlock>
-            <ChartBlock title={'Memory'}>
+            <ChartBlock key='memory' title={'Memory'}>
                 <Line {...memory.props} />
             </ChartBlock>
             <ChartBlock
+                key='network'
                 title={'Network'}
                 legend={
                     <>

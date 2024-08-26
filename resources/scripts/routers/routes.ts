@@ -13,6 +13,7 @@ import AccountApiContainer from '@/components/dashboard/AccountApiContainer';
 import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer';
 import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
+import AddonsContainer from '@/components/server/addons/AddonsContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -79,6 +80,12 @@ export default {
             permission: 'file.*',
             name: 'Files',
             component: FileManagerContainer,
+        },
+        {
+            path: '/addons',
+            permission: 'addon.*',
+            name: 'Add-ons',
+            component: AddonsContainer,
         },
         {
             path: '/files/:action(edit|new)',

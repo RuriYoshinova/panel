@@ -62,6 +62,8 @@ class CreateServerController extends Controller
     /**
      * Create a new server on the remote system.
      *
+     * This handles the validation and storage of the server creation request.
+     *
      * @throws \Illuminate\Validation\ValidationException
      * @throws \Pterodactyl\Exceptions\DisplayException
      * @throws \Pterodactyl\Exceptions\Service\Deployment\NoViableAllocationException
@@ -71,6 +73,8 @@ class CreateServerController extends Controller
     public function store(ServerFormRequest $request): RedirectResponse
     {
         $data = $request->except(['_token']);
+        \Log::info('Server creation data:', $data);
+
         if (!empty($data['custom_image'])) {
             $data['image'] = $data['custom_image'];
             unset($data['custom_image']);

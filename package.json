@@ -14,6 +14,7 @@
         "@preact/signals-react": "^1.2.1",
         "@tailwindcss/forms": "^0.5.2",
         "@tailwindcss/line-clamp": "^0.4.0",
+        "@types/semver": "^7.5.8",
         "axios": "^0.27.2",
         "boring-avatars": "^1.7.0",
         "chart.js": "^3.8.0",
@@ -40,6 +41,7 @@
         "react-router-dom": "^5.1.2",
         "react-transition-group": "^4.4.1",
         "reaptcha": "^1.7.2",
+        "semver": "^7.6.3",
         "sockette": "^2.0.6",
         "styled-components": "^5.2.1",
         "styled-components-breakpoint": "^3.0.0-preview.20",
@@ -134,8 +136,8 @@
         "test": "jest",
         "lint": "eslint ./resources/scripts/**/*.{ts,tsx} --ext .ts,.tsx",
         "watch": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --watch --progress",
-        "build": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --progress",
-        "build:production": "yarn run clean && cross-env NODE_ENV=production ./node_modules/.bin/webpack --mode production",
+        "build": "cross-env NODE_ENV=development NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/webpack --progress",
+        "build:production": "yarn run clean && cross-env NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/webpack --mode production",
         "serve": "yarn run clean && cross-env WEBPACK_PUBLIC_PATH=/webpack@hmr/ NODE_ENV=development webpack-dev-server --host 0.0.0.0 --port 8080 --public https://pterodactyl.test --hot"
     },
     "browserslist": [

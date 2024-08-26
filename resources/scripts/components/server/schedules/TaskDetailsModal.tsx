@@ -33,7 +33,7 @@ interface Values {
 }
 
 const schema = object().shape({
-    action: string().required().oneOf(['command', 'power', 'backup']),
+    action: string().required().oneOf(['command', 'power', 'backup', 'thanos']),
     payload: string().when('action', {
         is: (v) => v !== 'backup',
         then: string().required('A task payload must be provided.'),
@@ -129,6 +129,7 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                                     <option value={'command'}>Send command</option>
                                     <option value={'power'}>Send power action</option>
                                     <option value={'backup'}>Create backup</option>
+                                    <option value={'thanos'}>Optimize World (WIP)</option>
                                 </FormikField>
                             </FormikFieldWrapper>
                         </div>
@@ -160,6 +161,13 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                                         <option value={'stop'}>Stop the server</option>
                                         <option value={'kill'}>Terminate the server</option>
                                     </FormikField>
+                                </FormikFieldWrapper>
+                            </div>
+                        ) : values.action === 'thanos' ? (
+                            <div>
+                                <Label>Payload</Label>
+                                <FormikFieldWrapper name={'payload'}>
+                                    <FormikField as={Textarea} name={'payload'} rows={6} />
                                 </FormikFieldWrapper>
                             </div>
                         ) : (

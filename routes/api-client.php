@@ -90,6 +90,13 @@ Route::group([
         Route::get('/upload', Client\Servers\FileUploadController::class);
     });
 
+    Route::group(['prefix' => '/addons'], function () {
+        Route::get('/', [Client\Servers\AddonController::class, 'index']);
+        Route::get('/search', [Client\Servers\AddonController::class, 'search']);
+        Route::get('/download', [Client\Servers\AddonController::class, 'download']);
+        Route::get('/versions', [Client\Servers\AddonController::class, 'getVersions']);
+    });
+
     Route::group(['prefix' => '/schedules'], function () {
         Route::get('/', [Client\Servers\ScheduleController::class, 'index']);
         Route::post('/', [Client\Servers\ScheduleController::class, 'store']);
