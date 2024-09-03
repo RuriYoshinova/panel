@@ -19,11 +19,12 @@
 }
 
 .terminal {
-    @apply flex flex-col w-full;
+    @apply flex flex-col w-full max-w-screen-lg;
 
     & .overflows_container {
-        @apply -ml-4 sm:ml-0;
-        width: calc(100% + 2rem);
+        @apply sm:ml-0;
+        /* NOTE Only apply margin-left on small screens */
+        /* NOTE Remove width calculation to, fix width issue*/
 
         @screen sm {
             @apply w-full;

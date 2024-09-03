@@ -1,15 +1,15 @@
 <?php
 
-namespace Pterodactyl\Http\Controllers\Api\Client\Servers\AddonManager;
+namespace Pterodactyl\Http\Controllers\Api\Client\Servers;
 
 use Pterodactyl\Http\Controllers\Api\Client\ClientApiController;
 use Pterodactyl\Repositories\Wings\DaemonFileRepository;
 use Illuminate\Support\Facades\Cache;
-use Aternos\Taskmaster\Taskmaster;
 use Pterodactyl\Models\Server;
 use Illuminate\Http\Request;
-use ReadAndParseTask;
-use Http;
+use Yosymfony\Toml\Toml;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AddonController extends ClientApiController
 {
@@ -21,59 +21,17 @@ class AddonController extends ClientApiController
 
     public function index(Request $request, Server $server)
     {
+        $results = [];
         $serverFileRepo = $this->fileRepository
             ->setServer($server);
 
-        $nest = strtolower($server->nest->name);
-        $egg = strtolower($server->egg->name);
-
-        if ($nest !== 'minecraft') {
-            return response()->json(['error' => 'Unsupported nest'], 400);
-        }
-
-        $directoryMap = [
+        $addonDirectory = [
             'fabric' => 'mods/',
             'spigot' => 'plugins/',
-        ];
+        ][strtolower($server->egg->name)] ?? null;
 
-        $addonDirectory = $directoryMap[$egg] ?? null;
-
-        if ($addonDirectory === null) {
-            return response()->json(['error' => 'Unsupported egg'], 400);
-        }
-
-        $cacheKey = "server_{$server->id}_addons";
-        $taskmaster = new Taskmaster();
-        $taskmaster->autoDetectWorkers(8);
-
-        $addons = Cache::remember($cacheKey, now()->addMinutes(30), function () use ($serverFileRepo, $addonDirectory, $taskmaster) {
-            $addons = [];
-            $tasks = [];
-            $indexDirectory = $serverFileRepo->getDirectory("$addonDirectory.index/");
-
-            foreach ($indexDirectory as $file) {
-                $filename = $file['name'];
-                $filePath = "$addonDirectory.index/$filename";
-
-                // Create a new task for each file and run them
-                $task = new ReadAndParseTask($serverFileRepo, $filePath);
-                $tasks[] = $task;
-                $taskmaster->runTask($task);
-            }
-
-            $taskmaster->wait();
-
-            // Collect results from all tasks
-            foreach ($tasks as $task) {
-                $addons[] = $task->getResult();
-            }
-
-            $taskmaster->stop();
-
-            return $addons;
-        });
-
-        return response()->json($addons);
+        $indexDirectory = $serverFileRepo->getDirectory("$addonDirectory.index/");
+        return response()->json($results);
     }
 
     public function search(Request $request)

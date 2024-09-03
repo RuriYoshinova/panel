@@ -59,6 +59,19 @@
     }
 }
 
+.neutral {
+    @apply bg-yellow-600 text-gray-50;
+    @apply hover:bg-yellow-500 active:bg-yellow-500 focus:ring-yellow-400 focus:ring-opacity-75;
+
+    &.secondary {
+        @apply hover:bg-yellow-600 active:bg-yellow-600;
+    }
+
+    &:disabled {
+        @apply bg-yellow-600/75 text-yellow-50/75;
+    }
+}
+
 .danger {
     @apply bg-red-600 text-gray-50;
     @apply hover:bg-red-500 active:bg-red-500 focus:ring-red-400 focus:ring-opacity-75;

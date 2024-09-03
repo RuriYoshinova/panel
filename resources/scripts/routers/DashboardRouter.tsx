@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink, Route, Switch } from 'react-router-dom';
-import NavigationBar from '@/components/NavigationBar';
+// import NavigationBar from '@/components/NavigationBar';
 import DashboardContainer from '@/components/dashboard/DashboardContainer';
 import { NotFound } from '@/components/elements/ScreenBlock';
 import TransitionRouter from '@/TransitionRouter';
-import SubNavigation from '@/components/elements/SubNavigation';
+import Sidebar from '@/components/elements/Sidebar';
 import { useLocation } from 'react-router';
 import Spinner from '@/components/elements/Spinner';
 import routes from '@/routers/routes';
@@ -14,9 +14,9 @@ export default () => {
 
     return (
         <>
-            <NavigationBar />
+            {/* <NavigationBar /> */}
             {location.pathname.startsWith('/account') && (
-                <SubNavigation>
+                <Sidebar sidebarToggle={undefined}>
                     <div>
                         {routes.account
                             .filter((route) => !!route.name)
@@ -26,7 +26,7 @@ export default () => {
                                 </NavLink>
                             ))}
                     </div>
-                </SubNavigation>
+                </Sidebar>
             )}
             <TransitionRouter>
                 <React.Suspense fallback={<Spinner centered />}>

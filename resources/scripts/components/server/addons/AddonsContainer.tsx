@@ -1,4 +1,4 @@
-import { Addon, index as getIndex, search, limit, providers } from '@/api/server/addons';
+import { Addon, search, limit, providers, index } from '@/api/server/addons';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import AddonItem from '@/components/elements/AddonItem';
 import Spinner from '@/components/elements/Spinner';
@@ -24,29 +24,27 @@ const AddonContainer = () => {
     useEffect(() => {
         const handler = setTimeout(async () => {
             const fetchAddons = async () => {
+                // TODO: Addon Index
                 setLoading(true);
                 try {
-                    const searchData = (await search(uuid, searchTerm, pageSize, provider)).data;
-                    const indexData = (await getIndex(uuid)).data;
-
-                    const addonsData = searchData.hits.map((hit) => {
-                        const isInstalled = indexData.some((indexed) => {
-                            if (!indexed.update.modrinth) return false;
-                            return indexed.update.modrinth['mod-id'] === hit.project_id;
-                        });
-
-                        return { ...hit, isInstalled };
-                    });
-
-                    setAddons(addonsData);
+                    await index(uuid);
                 } catch (error) {
                     console.error(error);
                 }
+                const searchResponse = (await search(uuid, searchTerm, pageSize, provider)).data;
+
+                const addonsData = searchResponse.hits.map((hit) => {
+                    const isInstalled = false;
+
+                    return { ...hit, isInstalled };
+                });
+
+                setAddons(addonsData);
                 setLoading(false);
             };
 
             fetchAddons();
-        }, 300);
+        }, 250);
 
         return () => {
             clearTimeout(handler);

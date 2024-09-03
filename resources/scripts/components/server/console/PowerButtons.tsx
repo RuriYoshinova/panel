@@ -58,9 +58,9 @@ export default ({ className }: PowerButtonProps) => {
                 </Button>
             </Can>
             <Can action={'control.restart'}>
-                <Button.Text className={'flex-1'} disabled={!status} onClick={onButtonClick.bind(this, 'restart')}>
+                <Button.Neutral className={'flex-1'} disabled={!status} onClick={onButtonClick.bind(this, 'restart')}>
                     Restart
-                </Button.Text>
+                </Button.Neutral>
             </Can>
             <Can action={'control.stop'}>
                 <Button.Danger

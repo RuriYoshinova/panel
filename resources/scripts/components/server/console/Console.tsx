@@ -18,6 +18,8 @@ import { ChevronDoubleRightIcon } from '@heroicons/react/solid';
 
 import 'xterm/css/xterm.css';
 import styles from './style.module.css';
+import { ApplicationStore } from '@/state';
+import { useStoreState } from 'easy-peasy';
 
 const theme = {
     background: th`colors.black`.toString(),
@@ -52,7 +54,9 @@ const terminalProps: ITerminalOptions = {
 };
 
 export default () => {
-    const TERMINAL_PRELUDE = '\u001b[1m\u001b[33mcontainer@pterodactyl~ \u001b[0m';
+    const server_name = ServerContext.useStoreState((state) => state.server.data!.name);
+    const node_name = useStoreState((state: ApplicationStore) => state.settings.data!.name);
+    const TERMINAL_PRELUDE = `\u001b[1m\u001b[33m${server_name}@${node_name}~ \u001b[0m`;
     const ref = useRef<HTMLDivElement>(null);
     const terminal = useMemo(() => new Terminal({ ...terminalProps }), []);
     const fitAddon = new FitAddon();
@@ -206,7 +210,7 @@ export default () => {
                     <input
                         className={classNames('peer', styles.command_input)}
                         type={'text'}
-                        placeholder={'Type a command...'}
+                        placeholder={'Type a command :3'}
                         aria-label={'Console command input.'}
                         disabled={!instance || !connected}
                         onKeyDown={handleCommandKeyDown}

@@ -28,12 +28,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 const TextButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...props }, ref) => (
-    // @ts-expect-error not sure how to get this correct
     <Button ref={ref} className={classNames(styles.text, className)} {...props} />
 ));
 
+const NeutralButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...props }, ref) => (
+    <Button ref={ref} className={classNames(styles.neutral, className)} {...props} />
+));
+
 const DangerButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...props }, ref) => (
-    // @ts-expect-error not sure how to get this correct
     <Button ref={ref} className={classNames(styles.danger, className)} {...props} />
 ));
 
@@ -42,6 +44,7 @@ const _Button = Object.assign(Button, {
     Shapes: Options.Shape,
     Variants: Options.Variant,
     Text: TextButton,
+    Neutral: NeutralButton,
     Danger: DangerButton,
 });
 

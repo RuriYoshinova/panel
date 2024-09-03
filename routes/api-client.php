@@ -91,10 +91,10 @@ Route::group([
     });
 
     Route::group(['prefix' => '/addons'], function () {
-        Route::get('/', [Client\Servers\AddonManager\AddonController::class, 'index']);
-        Route::get('/search', [Client\Servers\AddonManager\AddonController::class, 'search']);
-        Route::get('/download', [Client\Servers\AddonManager\AddonController::class, 'download']);
-        Route::get('/versions', [Client\Servers\AddonManager\AddonController::class, 'getVersions']);
+        Route::get('/', [Client\Servers\AddonController::class, 'index']);
+        Route::get('/search', [Client\Servers\AddonController::class, 'search']);
+        Route::get('/download', [Client\Servers\AddonController::class, 'download']);
+        Route::get('/versions', [Client\Servers\AddonController::class, 'getVersions']);
     });
 
     Route::group(['prefix' => '/schedules'], function () {

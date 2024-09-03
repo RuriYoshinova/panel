@@ -1,3 +1,5 @@
+import { Ref } from 'react';
+
 enum Shape {
     Default,
     IconSquare,
@@ -20,4 +22,5 @@ export type ButtonProps = JSX.IntrinsicElements['button'] & {
     shape?: Shape;
     size?: Size;
     variant?: Variant;
+    ref?: Ref<HTMLButtonElement>;
 };
